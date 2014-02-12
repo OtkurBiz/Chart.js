@@ -1336,10 +1336,18 @@ window.Chart = function(context, options){
 					if ( data.datasets[i].data[j] < lowerValue) { lowerValue = data.datasets[i].data[j] };
 				}
 			};
+
+			if(data.datasets.length === 1){
+ 				if(config.scaleStartValue === null){
+					lowerValue = 0;
+				}else{
+					lowerValue = config.scaleStartValue;
+				}			
+			}
 	
 			var maxSteps = Math.floor((scaleHeight / (labelHeight*0.66)));
 			var minSteps = Math.floor((scaleHeight / labelHeight*0.5));
-			
+			debugger;
 			return {
 				maxValue : upperValue,
 				minValue : lowerValue,
@@ -1627,6 +1635,7 @@ window.Chart = function(context, options){
 	function calculateScale(drawingHeight,maxSteps,minSteps,maxValue,minValue,labelTemplateString){
 		var graphMin,graphMax,graphRange,stepValue,numberOfSteps,valueRange,rangeOrderOfMagnitude,decimalNum;
 		valueRange = maxValue - minValue;
+		debugger;
 		rangeOrderOfMagnitude = calculateOrderOfMagnitude(valueRange);
 		graphMin = Math.floor(minValue / (1 * Math.pow(10, rangeOrderOfMagnitude))) * Math.pow(10, rangeOrderOfMagnitude);       
 		graphMax = Math.ceil(maxValue / (1 * Math.pow(10, rangeOrderOfMagnitude))) * Math.pow(10, rangeOrderOfMagnitude);
@@ -1637,7 +1646,8 @@ window.Chart = function(context, options){
 		//Compare number of steps to the max and min for that size graph, and add in half steps if need be.	        
 		while(numberOfSteps < minSteps || numberOfSteps > maxSteps) {
 			if (numberOfSteps < minSteps){
-				stepValue /= 2;
+				//to have integer
+				stepValue = Math.round(stepValue/2);
 				numberOfSteps = Math.round(graphRange/stepValue);
 			}
 			else{
